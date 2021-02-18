@@ -17,7 +17,6 @@ function App() {
 
   const [totalCases, setTotalCases] = useState([]);
   const [statewise, setStateWise] = useState([]);
-  // const [casesTimeSeries, setCasesTimeSeries] = useState([]);
   const [statesDaily, setStatesDaily] = useState([]);
 
   useEffect(() => {
