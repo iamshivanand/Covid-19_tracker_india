@@ -5,8 +5,9 @@ body {
   display: flex;
 }
 .left-container {
-  width: 50vw;
+  /* width: 50vw; */
   min-width: 650px;
+  max-width: 800px;
 }
 .upper-left-container {
   margin: 0px;
@@ -28,9 +29,26 @@ p {
 }
 .doughnut-chart {
   width: 50%;
+  position: relative;
 }
 .line-chart {
   width: 50%;
+}
+
+.confirmed-graph {
+  z-index: 100;
+  background-color: transparent;
+  position: absolute;
+  height: 40px;
+  width: 65px;
+  left: 105px;
+  top: 50px;
+  color: red;
+  font-family: cursive;
+  /* border: 2px solid black; */
+}
+.total {
+  text-align: center;
 }
 
 /* table */

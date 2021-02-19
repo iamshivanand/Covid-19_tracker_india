@@ -18,6 +18,11 @@ function App() {
   const [totalCases, setTotalCases] = useState([]);
   const [statewise, setStateWise] = useState([]);
   const [statesDaily, setStatesDaily] = useState([]);
+  const [CasesToday, setCasesTOday] = useState([]);
+  const [confirmedCases, setConfirmedCases] = useState([]);
+  var [sevenDaysConfirmedCases, setSevenDaysConfirmedCases] = useState([]);
+  var [sevenDaysDeceasedCases, setSevenDaysDeceasedCases] = useState([]);
+  var [sevenDaysRecoveredCases, setSevenDaysRecoveredCases] = useState([]);
 
   useEffect(() => {
     fetch(api1)
@@ -29,104 +34,91 @@ function App() {
     fetch(api2)
       .then((res) => res.json())
       .then((json) => {
-        // var cases_time_series = json.cases_time_series;
-        // setCasesTimeSeries(cases_time_series);
         var statewise = json.statewise;
-        // statewise.map((each) => {
-        //   if (each.state === "Total") {
-        //     setTotalCases(each);
-        //   }
         setTotalCases(statewise[0]);
-          setStateWise(statewise);
-        // });
+        setStateWise(statewise);
+        var todayCases = [
+          totalCases.active,
+          totalCases.deaths,
+          totalCases.recovered,
+        ];
+        setCasesTOday(todayCases);
       });
-    // console.log(totalCases);
   }, []);
+
   function totalCasesData(cases) {
-    var totalCasesToday = [cases.active, cases.deaths, cases.recovered];
-    return totalCasesToday;
+    var casesToday = [cases.active, cases.deaths, cases.recovered];
+    return casesToday;
   }
-  var totalCasesToday = totalCasesData(totalCases);
-  // console.log(totalCasesToday);
+  function totalConfirmedCases(cases) {
+    setConfirmedCases(cases.confirmed);
+  }
 
   //finding the data for the last seven days for total india
   var todayIndex = statesDaily.findIndex((x) => x.dateymd === today);
 
-  function sevenDaysFun() {
-    return {
-      day1: {
-        confirmed: statesDaily[todayIndex],
-        deceased: statesDaily[todayIndex - 1],
-        recovered: statesDaily[todayIndex - 2],
-      },
-      day2: {
-        confirmed: statesDaily[todayIndex - 3],
-        deceased: statesDaily[todayIndex - 4],
-        recovered: statesDaily[todayIndex - 5],
-      },
-      day3: {
-        confirmed: statesDaily[todayIndex - 6],
-        deceased: statesDaily[todayIndex - 7],
-        recovered: statesDaily[todayIndex - 8],
-      },
-      day4: {
-        confirmed: statesDaily[todayIndex - 9],
-        deceased: statesDaily[todayIndex - 10],
-        recovered: statesDaily[todayIndex - 11],
-      },
-      day5: {
-        confirmed: statesDaily[todayIndex - 12],
-        deceased: statesDaily[todayIndex - 13],
-        recovered: statesDaily[todayIndex - 14],
-      },
-      day6: {
-        confirmed: statesDaily[todayIndex - 15],
-        deceased: statesDaily[todayIndex - 16],
-        recovered: statesDaily[todayIndex - 17],
-      },
-      day7: {
-        confirmed: statesDaily[todayIndex - 18],
-        deceased: statesDaily[todayIndex - 19],
-        recovered: statesDaily[todayIndex - 20],
-      },
-    };
+  function sevenDaysConfirmedData(stateCode) {
+    console.log(stateCode);
+    var data = [
+      statesDaily[todayIndex - 18][stateCode],
+      statesDaily[todayIndex - 15][stateCode],
+      statesDaily[todayIndex - 12][stateCode],
+      statesDaily[todayIndex - 9][stateCode],
+      statesDaily[todayIndex - 6][stateCode],
+      statesDaily[todayIndex - 3][stateCode],
+      statesDaily[todayIndex][stateCode],
+    ];
+    setSevenDaysConfirmedCases(data);
   }
 
-  function findSevenDaysData(state) {
-    var sevenDays = sevenDaysFun();
-    var sevenDaysAll = {
-      confirmedSevenDays: [
-        sevenDays.day1.confirmed.state,
-        sevenDays.day2.confirmed.state,
-        sevenDays.day3.confirmed.state,
-        sevenDays.day4.confirmed.state,
-        sevenDays.day5.confirmed.state,
-        sevenDays.day6.confirmed.state,
-        sevenDays.day7.confirmed.state,
-      ],
-      deceasedSevenDays: [
-        sevenDays.day1.deceased.state,
-        sevenDays.day2.deceased.state,
-        sevenDays.day3.deceased.state,
-        sevenDays.day4.deceased.state,
-        sevenDays.day5.deceased.state,
-        sevenDays.day6.deceased.state,
-        sevenDays.day7.deceased.state,
-      ],
-      recoveredSevenDays: [
-        sevenDays.day1.recovered.state,
-        sevenDays.day2.recovered.state,
-        sevenDays.day3.recovered.state,
-        sevenDays.day4.recovered.state,
-        sevenDays.day5.recovered.state,
-        sevenDays.day6.recovered.state,
-        sevenDays.day7.recovered.state,
-      ],
-    };
-    return sevenDaysAll;
+  // var stateCode = "tt";
+  // var sevenDaysConfirmedCases = sevenDaysConfirmedData(stateCode);
+
+  // console.log(sevenDaysConfirmedCases);
+
+  function sevenDaysDeceasedData(stateCode) {
+    var data = [
+      statesDaily[todayIndex - 19][stateCode],
+      statesDaily[todayIndex - 16][stateCode],
+      statesDaily[todayIndex - 13][stateCode],
+      statesDaily[todayIndex - 10][stateCode],
+      statesDaily[todayIndex - 7][stateCode],
+      statesDaily[todayIndex - 4][stateCode],
+      statesDaily[todayIndex - 1][stateCode],
+    ];
+    setSevenDaysDeceasedCases(data);
   }
-  // console.log(findSevenDaysData("tt"));
-  // console.log(totalCases);
+  // var sevenDaysDeceasedCases = sevenDaysDeceasedData(stateCode);
+  function sevenDaysRecoveredData(stateCode) {
+    var data = [
+      statesDaily[todayIndex - 20][stateCode],
+      statesDaily[todayIndex - 17][stateCode],
+      statesDaily[todayIndex - 14][stateCode],
+      statesDaily[todayIndex - 11][stateCode],
+      statesDaily[todayIndex - 8][stateCode],
+      statesDaily[todayIndex - 5][stateCode],
+      statesDaily[todayIndex - 2][stateCode],
+    ];
+    setSevenDaysRecoveredCases(data);
+  }
+  // var sevenDaysRecoveredCases = sevenDaysRecoveredData(stateCode);
+
+  function handleMouseEnter(event) {
+    var cases = event.currentTarget.dataset.info;
+    cases = JSON.parse(cases);
+    var newCase = totalCasesData(cases);
+    setCasesTOday(newCase);
+    totalConfirmedCases(cases);
+    var stateCode = cases.statecode.toLowerCase();
+    sevenDaysConfirmedData(stateCode);
+    sevenDaysDeceasedData(stateCode);
+    sevenDaysRecoveredData(stateCode);
+  }
+  function handleMouseLeave(event) {
+    setCasesTOday([totalCases.active, totalCases.deaths, totalCases.recovered]);
+    totalConfirmedCases(totalCases);
+  }
+
   return (
     <div className="App">
       <div className="left-container">
@@ -137,8 +129,18 @@ function App() {
             Locate.
           </p>
         </div>
-        <Graphs totalCasesToday={totalCasesToday} />
-        <Table data={statewise} />
+        <Graphs
+          totalCasesToday={CasesToday}
+          confirmedCases={confirmedCases}
+          sevenDaysConfirmedCases={sevenDaysConfirmedCases}
+          sevenDaysDeceasedCases={sevenDaysDeceasedCases}
+          sevenDaysRecoveredCases={sevenDaysRecoveredCases}
+        />
+        <Table
+          data={statewise}
+          handleMouseEnter={handleMouseEnter}
+          handleMouseLeave={handleMouseLeave}
+        />
       </div>
       <div className="right-container">
         <div className="upper-right-container">
